@@ -250,6 +250,10 @@ WHEN NOT MATCHED AND u.type = "insert"
 
 -- COMMAND ----------
 
+DROP TABLE updates
+
+-- COMMAND ----------
+
 -- MAGIC %md
 -- MAGIC 
 -- MAGIC 

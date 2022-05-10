@@ -250,6 +250,10 @@ DESCRIBE HISTORY students
 
 -- COMMAND ----------
 
+DESCRIBE HISTORY students
+
+-- COMMAND ----------
+
 SELECT * 
 FROM students VERSION AS OF 3
 
@@ -295,7 +299,7 @@ SELECT * FROM students
 
 -- COMMAND ----------
 
-RESTORE TABLE students TO VERSION AS OF 8 
+RESTORE TABLE students TO VERSION AS OF 8
 
 -- COMMAND ----------
 
