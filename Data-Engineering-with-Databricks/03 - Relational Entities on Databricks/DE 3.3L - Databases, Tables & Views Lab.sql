@@ -77,9 +77,7 @@ FROM parquet.`${da.paths.working_dir}/weather`
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL-IN> ${da.db_name}
+CREATE DATABASE ${da.db_name}
 
 -- COMMAND ----------
 
@@ -103,9 +101,7 @@ FROM parquet.`${da.paths.working_dir}/weather`
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL-IN> ${da.db_name}
+USE ${da.db_name}
 
 -- COMMAND ----------
 
@@ -128,9 +124,7 @@ FROM parquet.`${da.paths.working_dir}/weather`
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL-IN>
+CREATE TABLE IF NOT EXISTS weather_managed
 SELECT * 
 FROM parquet.`${da.paths.working_dir}/weather`
 
@@ -157,9 +151,7 @@ FROM parquet.`${da.paths.working_dir}/weather`
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL-IN>
+CREATE TABLE IF NOT EXISTS weather_external
 LOCATION "${da.paths.working_dir}/lab/external"
 AS SELECT * 
 FROM parquet.`${da.paths.working_dir}/weather`
@@ -248,9 +240,7 @@ DESCRIBE EXTENDED weather_external
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL_IN> ${da.db_name}
+DROP DATABASE ${da.db_name} CASCADE
 
 -- COMMAND ----------
 
@@ -275,8 +265,8 @@ DESCRIBE EXTENDED weather_external
 -- COMMAND ----------
 
 -- MAGIC %python
--- MAGIC # files = dbutils.fs.ls(managedTablePath)
--- MAGIC # display(files)
+-- MAGIC files = dbutils.fs.ls(managedTablePath)
+-- MAGIC display(files)
 
 -- COMMAND ----------
 
@@ -322,9 +312,9 @@ USE ${da.db_name};
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL_IN>
+CREATE TABLE IF NOT EXISTS weather_managed
+SELECT * 
+FROM parquet.`${da.paths.working_dir}/weather`
 
 -- COMMAND ----------
 
@@ -364,12 +354,10 @@ USE ${da.db_name};
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL-IN>
+CREATE VIEW celsius
 AS (SELECT *
   FROM weather_managed
-  WHERE UNIT = "C")
+  WHERE UNIT = "C");
 
 -- COMMAND ----------
 
@@ -392,9 +380,7 @@ AS (SELECT *
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL-IN>
+CREATE TEMP VIEW celsius_temp
 AS (SELECT *
   FROM weather_managed
   WHERE UNIT = "C")
@@ -420,9 +406,7 @@ AS (SELECT *
 
 -- COMMAND ----------
 
--- TODO
-
-<FILL-IN>
+CREATE GLOBAL TEMP VIEW celsius_temp
 AS (SELECT *
   FROM weather_managed
   WHERE UNIT = "C")
