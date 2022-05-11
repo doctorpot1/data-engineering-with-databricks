@@ -68,8 +68,17 @@
 
 -- COMMAND ----------
 
--- TODO
-<FILL_IN> ${da.paths.datasets}/raw/events-kafka/
+SELECT * FROM json.`${da.paths.datasets}/raw/events-kafka/`
+
+-- COMMAND ----------
+
+CREATE OR REPLACE TABLE events_json (key BINARY, offset BIGINT, partition INT, timestamp BIGINT, topic STRING, value BINARY);
+CREATE OR REPLACE TEMP VIEW temp_event AS SELECT * FROM json.`${da.paths.datasets}/raw/events-kafka/`;
+MERGE INTO events_json a
+USING temp_event b
+ON a.key = b.key
+WHEN NOT MATCHED THEN
+  INSERT *
 
 -- COMMAND ----------
 
@@ -99,8 +108,7 @@
 
 -- COMMAND ----------
 
--- TODO
-<FILL_IN>
+CREATE OR REPLACE TABLE events_raw(key BINARY, offset BIGINT, partition INT, timestamp BIGINT, topic STRING, value BINARY);
 
 -- COMMAND ----------
 
@@ -128,8 +136,11 @@
 
 -- COMMAND ----------
 
--- TODO
-<FILL_IN>
+MERGE INTO events_raw a
+USING events_json b
+ON a.key = b.key
+WHEN NOT MATCHED THEN
+  INSERT *
 
 -- COMMAND ----------
 
@@ -140,8 +151,7 @@
 
 -- COMMAND ----------
 
--- TODO
-<FILL_IN>
+SELECT * FROM events_raw
 
 -- COMMAND ----------
 
@@ -169,8 +179,8 @@
 
 -- COMMAND ----------
 
--- TODO
-<FILL_IN> ${da.paths.datasets}/raw/item-lookup
+CREATE OR REPLACE TABLE item_lookup AS 
+SELECT * FROM parquet.`${da.paths.datasets}/raw/item-lookup`
 
 -- COMMAND ----------
 
