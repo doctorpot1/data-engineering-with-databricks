@@ -180,6 +180,13 @@ FROM events
 
 -- COMMAND ----------
 
+SELECT user_id, collect_set(event_name) AS event_history, collect_set(items.item_id)
+FROM events
+GROUP BY user_id
+-- Above have 2D array so we flatten it to 1 array and array distinct to deduplicate
+
+-- COMMAND ----------
+
 SELECT user_id,
   collect_set(event_name) AS event_history,
   array_distinct(flatten(collect_set(items.item_id))) AS cart_history
