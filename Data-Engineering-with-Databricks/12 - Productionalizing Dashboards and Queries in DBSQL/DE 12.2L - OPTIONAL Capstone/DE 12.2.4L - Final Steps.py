@@ -39,8 +39,7 @@
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC -- TODO
-# MAGIC <FILL-IN>
+# MAGIC SELECT * FROM ${da.db_name}.recordings_bronze WHERE heartrate <= 0
 
 # COMMAND ----------
 
@@ -69,18 +68,27 @@
 
 # COMMAND ----------
 
-# TODO
-# CREATE OR REFRESH STREAMING LIVE TABLE recordings_enriched
-#   (CONSTRAINT positive_heartrate EXPECT (heartrate > 0) ON VIOLATION DROP ROW)
-# AS SELECT 
-#   CAST(a.device_id AS INTEGER) device_id, 
-#   CAST(a.mrn AS LONG) mrn, 
-#   CAST(a.heartrate AS DOUBLE) heartrate, 
-#   CAST(from_unixtime(a.time, 'yyyy-MM-dd HH:mm:ss') AS TIMESTAMP) time,
-#   b.name
-#   FROM STREAM(live.recordings_bronze) a
-#   INNER JOIN STREAM(live.pii) b
-#   ON a.mrn = b.mrn
+# MAGIC %sql
+# MAGIC -- # TODO
+# MAGIC -- # CREATE OR REFRESH STREAMING LIVE TABLE recordings_enriched
+# MAGIC -- #   (CONSTRAINT positive_heartrate EXPECT (heartrate > 0) ON VIOLATION DROP ROW)
+# MAGIC -- # AS SELECT 
+# MAGIC -- #   CAST(a.device_id AS INTEGER) device_id, 
+# MAGIC -- #   CAST(a.mrn AS LONG) mrn, 
+# MAGIC -- #   CAST(a.heartrate AS DOUBLE) heartrate, 
+# MAGIC -- #   CAST(from_unixtime(a.time, 'yyyy-MM-dd HH:mm:ss') AS TIMESTAMP) time,
+# MAGIC -- #   b.name
+# MAGIC -- #   FROM STREAM(live.recordings_bronze) a
+# MAGIC -- #   INNER JOIN STREAM(live.pii) b
+# MAGIC -- #   ON a.mrn = b.mrn
+# MAGIC 
+# MAGIC INSERT INTO ${da.db_name}.recordings_enriched
+# MAGIC   SELECT CAST(a.device_id AS INTEGER) device_id, CAST(a.mrn AS LONG) mrn, CAST(a.abs_heartrate AS DOUBLE) heartrate, CAST(from_unixtime(a.time, 'yyyy-MM-dd HH:mm:ss') AS TIMESTAMP) time,b.name
+# MAGIC   FROM (
+# MAGIC     SELECT abs(heartrate) AS abs_heartrate, * FROM ${da.db_name}.recordings_bronze WHERE heartrate <= 0
+# MAGIC   ) a
+# MAGIC   INNER JOIN ${da.db_name}.pii b
+# MAGIC   ON a.mrn = b.mrn
 
 # COMMAND ----------
 
@@ -93,8 +101,10 @@
 
 # COMMAND ----------
 
-# TODO
-<FILL-IN>
+# MAGIC %sql
+# MAGIC SELECT * FROM 
+# MAGIC (SELECT COUNT(*) AS bronze_count FROM ${da.db_name}.recordings_bronze) a
+# MAGIC LEFT JOIN (SELECT COUNT(*) AS silver_count FROM ${da.db_name}.recordings_enriched) b
 
 # COMMAND ----------
 
